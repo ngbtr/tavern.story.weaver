@@ -1,8 +1,12 @@
-# com.dyb.tavern.story.weaver
+# 🧶 story-weaver project overview
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+**Story Weaver** is a Quarkus-based microservice that acts as an **AI Game Master** for tabletop-style roleplaying games like Dungeons & Dragons. 
+It generates and guides interactive narratives in real time using a large language model (LLM), responding to players' actions and shaping the story on the fly.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+This project is part of the **Tavern** ecosystem, where:
+- `story-weaver` handles story generation and session orchestration,
+- `scribe` delivers messages to players (e.g., via Telegram).
+
 
 ## Running the application in dev mode
 
