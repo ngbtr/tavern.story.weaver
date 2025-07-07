@@ -1,0 +1,17 @@
+services:
+  dyb.tavern.postgres:
+    image: postgres:16
+    container_name: dyb.tavern.postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${TAVERN_DB_WEAVER_USER:?Set TAVERN_DB_WEAVER_USER in your shell}
+      POSTGRES_PASSWORD: ${TAVERN_DB_WEAVER_PASSWORD:?Set TAVERN_DB_WEAVER_PASSWORD in your shell}
+      POSTGRES_DB: ${TAVERN_DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
+
+

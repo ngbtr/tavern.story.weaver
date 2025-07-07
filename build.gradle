@@ -43,3 +43,42 @@ compileJava {
 compileTestJava {
     options.encoding = 'UTF-8'
 }
+
+tasks.register('ensurePostgresRunning') {
+    doLast {
+        def composeFilePath = 'infra/storage/db/pg/compose'
+        def check = ['docker-compose', 'ps', '--filter', 'status=running', '--services']
+                .execute(null, new File(composeFilePath))
+        def output = check.text.trim()
+
+        if (!output.contains('dyb.tavern.postgres')) {
+            println '🔄 Postgres container not running — starting via docker-compose...'
+
+            def process = new ProcessBuilder(
+                    'docker-compose',
+                    '-f', 'docker-compose.yml',
+                    'up', '-d', 'dyb.tavern.postgres'
+            )
+                    .directory(new File(composeFilePath))
+                    .redirectErrorStream(true) // stderr + stdout вместе
+                    .start()
+
+            def reader = new BufferedReader(new InputStreamReader(process.inputStream))
+            def line
+            while ((line = reader.readLine()) != null) {
+                println line
+            }
+
+            def exit = process.waitFor()
+            if (exit != 0) {
+                throw new GradleException("❌ docker-compose failed with exit code $exit")
+            }
+        } else {
+            println '✅ Postgres container is already running.'
+        }
+    }
+}
+
+
+quarkusDev.dependsOn 'ensurePostgresRunning'
+
